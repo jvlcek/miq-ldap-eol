@@ -2,8 +2,6 @@ require 'sssd_conf/common'
 
 module MiQLdapToSssd
   class SssdConfSssd < SssdConfCommon
-    attr_reader :installation_specific_fields, :section_name
-
     def initialize
       @section_name = "sssd"
       @installation_specific_fields = %w(

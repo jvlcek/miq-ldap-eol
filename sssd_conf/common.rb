@@ -2,6 +2,8 @@ module MiQLdapToSssd
   SSSD_CONF_FILE = "/Users/jvlcek/MYJUNK/LANGUAGES/RUBY/EXAMPLES/MIQLDAP_2_SSSD/sssd.conf".freeze
 
   class SssdConfCommon
+    attr_reader :installation_specific_fields, :section_name
+
     def new_attribute_values
       installation_specific_fields.each_with_object({}) { |attribute, hsh| hsh[attribute.to_sym] = send(attribute) }
     end
@@ -25,7 +27,8 @@ module MiQLdapToSssd
     end
 
     def update_attribute_values
-      # replace section in file with new has
+      { section_name.to_sym => current_attribute_values.merge(new_attribute_values) }
     end
+
   end
 end

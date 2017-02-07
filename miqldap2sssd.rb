@@ -9,8 +9,15 @@ require 'sssd_conf'
 require 'sssd_conf/domain'
 require 'sssd_conf/sssd'
 
+# JJV require 'sssd_conf/nss'
+# JJV require 'sssd_conf/pam'
+# JJV require 'sssd_conf/ifp'
+
+
 module MiQLdapToSssd
   if __FILE__ == $PROGRAM_NAME
-    pp SssdConf.update
+    pp SssdConf.new
+    puts "UPDATE +++ +++ +++ +++ +++ +++"
+    pp SssdConf.new.update
   end
 end

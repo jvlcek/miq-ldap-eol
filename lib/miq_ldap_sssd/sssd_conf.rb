@@ -10,25 +10,23 @@ module MiQLdapToSssd
   SSSD_CONF_FILE = "/Users/jvlcek/MYJUNK/LANGUAGES/RUBY/EXAMPLES/MIQLDAP_2_SSSD/sssd.conf_POST_AUTHCONFIG".freeze
 
   class SssdConf
-    attr_accessor :sssd_conf_initial_contents
+    attr_accessor :sssd_conf_contents
 
     def initialize
-      @sssd_conf_initial_contents = sssd_conf2hash
+      @sssd_conf_contents = sssd_conf2hash
     end
 
-    def sssd_conf2hash
-      x = current_sections
-      x.each { |section, value| x[section] = current_attribute_values(section) }
+    def update
+      [Sssd, Domain].each do |section_class|
+        section = section_class.new
+        sssd_conf_contents[section.section_name.to_sym] = section.update_attribute_values(sssd_conf_contents)
+      end
+
+      write_updates(sssd_conf_contents)
+      sssd_conf_contents # JJV TODO remove this line
     end
 
-    def current_sections
-      sections = File.open(SSSD_CONF_FILE).grep(/\[/)
-      sections.each_with_object({}) do |section, hsh|
-        section = "domain" if section.start_with?("[domain")
-
-        hsh[section.gsub(/"|\[|\]/, '').strip.downcase.to_sym] = {}
-      end 
-    end
+    private
 
     def current_attribute_values(section)
       result = {}
@@ -48,15 +46,31 @@ module MiQLdapToSssd
       result
     end
 
-    def update
-      sssd_conf_section_classes = [Sssd, Domain]
-      # Write updates to sssd_conf
-      # unless sssd.conf.miq_orig cp sssd.conf to sssd.conf.miq_orig
-      sssd_conf_section_classes.each do |section_class|
-        section = section_class.new
-        sssd_conf_initial_contents[section.section_name.to_sym] = section.update_attribute_values(sssd_conf_initial_contents)
+    def current_sections
+      sections = File.open(SSSD_CONF_FILE, "r").grep(/\[/)
+      sections.each_with_object({}) do |section, hsh|
+        section = "domain" if section.start_with?("[domain")
+
+        hsh[section.gsub(/"|\[|\]/, '').strip.downcase.to_sym] = {}
+      end 
+    end
+
+    def sssd_conf2hash
+      sections_hash = current_sections
+      sections_hash.each { |section, _value| sections_hash[section] = current_attribute_values(section) }
+    end
+
+    def write_updates(sssd_conf_contents)
+      puts "JJV #{__FILE__} - #{__method__}"
+
+      File.open(SSSD_CONF_FILE, "w") do |f|
+        sssd_conf_contents.each do |section, values|
+          f.write("\n[#{section.to_s}]\n")
+          values.each do |attribute, value|
+            f.write("#{attribute.to_s} = #{value}\n")
+          end
+        end
       end
-      sssd_conf_initial_contents
     end
   end
 end

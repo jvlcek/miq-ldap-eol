@@ -7,7 +7,6 @@ module MiQLdapToSssd
     end
 
     def section_name
-      puts "JJV #{__FILE__} - #{__method__} ->#{self.class.name.downcase.split('::').last}<-"
       self.class.name.downcase.split('::').last
     end
 

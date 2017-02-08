@@ -6,10 +6,6 @@ $LOAD_PATH.push("#{File.dirname(__FILE__)}/../lib/miq_ldap_sssd")
 require 'pp'
 
 require 'sssd_conf'
-require 'sssd_conf/domain'
-require 'sssd_conf/sssd'
-require 'sssd_conf/pam'
-require 'sssd_conf/ifp'
 
 
 module MiQLdapToSssd

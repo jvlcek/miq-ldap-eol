@@ -5,6 +5,8 @@ $LOAD_PATH.push(File.dirname(__FILE__))
 
 require 'sssd_conf/domain'
 require 'sssd_conf/sssd'
+require 'sssd_conf/pam'
+require 'sssd_conf/ifp'
 
 module MiQLdapToSssd
   SSSD_CONF_FILE = "/Users/jvlcek/MYJUNK/LANGUAGES/RUBY/EXAMPLES/MIQLDAP_2_SSSD/sssd.conf_POST_AUTHCONFIG".freeze

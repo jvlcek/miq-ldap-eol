@@ -6,18 +6,10 @@ $LOAD_PATH.push("#{File.dirname(__FILE__)}/../lib/miq_ldap_sssd")
 require 'pp'
 
 require 'sssd_conf'
-require 'sssd_conf/domain'
-require 'sssd_conf/sssd'
-
-# JJV require 'sssd_conf/nss'
-# JJV require 'sssd_conf/pam'
-# JJV require 'sssd_conf/ifp'
 
 
 module MiQLdapToSssd
   if __FILE__ == $PROGRAM_NAME
-    pp SssdConf.new
-    puts "UPDATE +++ +++ +++ +++ +++ +++"
-    pp SssdConf.new.update
+    SssdConf.new.update
   end
 end

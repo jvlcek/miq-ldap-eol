@@ -5,6 +5,8 @@ $LOAD_PATH.push(File.dirname(__FILE__))
 
 require 'sssd_conf/domain'
 require 'sssd_conf/sssd'
+require 'sssd_conf/pam'
+require 'sssd_conf/ifp'
 
 module MiQLdapToSssd
   SSSD_CONF_FILE = "/Users/jvlcek/MYJUNK/LANGUAGES/RUBY/EXAMPLES/MIQLDAP_2_SSSD/sssd.conf_POST_AUTHCONFIG".freeze
@@ -17,13 +19,12 @@ module MiQLdapToSssd
     end
 
     def update
-      [Sssd, Domain].each do |section_class|
+      [Domain, Sssd, Pam, Ifp].each do |section_class|
         section = section_class.new
         sssd_conf_contents[section.section_name.to_sym] = section.update_attribute_values(sssd_conf_contents)
       end
 
       write_updates(sssd_conf_contents)
-      sssd_conf_contents # JJV TODO remove this line
     end
 
     private
@@ -61,16 +62,21 @@ module MiQLdapToSssd
     end
 
     def write_updates(sssd_conf_contents)
-      puts "JJV #{__FILE__} - #{__method__}"
-
       File.open(SSSD_CONF_FILE, "w") do |f|
         sssd_conf_contents.each do |section, values|
-          f.write("\n[#{section.to_s}]\n")
+
+          # Domain is a special case because the section title is updated from [domain/default] to [doamin/<new domain>]
+          if section == :domain
+            f.write("\n[#{Domain.update_domain_value}]\n")
+          else
+            f.write("\n[#{section.to_s}]\n")
+          end
           values.each do |attribute, value|
             f.write("#{attribute.to_s} = #{value}\n")
           end
         end
       end
     end
+
   end
 end

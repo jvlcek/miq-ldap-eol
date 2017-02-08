@@ -21,6 +21,11 @@ module MiQLdapToSssd
       )
     end
 
+    # Domain is a special case because the section title is updated from [domain/default] to [doamin/<new domain>]
+    def self.update_domain_value
+      "domain/my_domain.com"
+    end
+
     def entry_cache_timeout
       "entry_cache_timeout new_value"
     end

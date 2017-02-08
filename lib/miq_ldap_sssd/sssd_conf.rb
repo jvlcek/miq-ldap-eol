@@ -49,11 +49,12 @@ module MiQLdapToSssd
     end
 
     def update
-      sssd_conf_section_classes = [SssdConfSssd, SssdConfDomain]
+      sssd_conf_section_classes = [Sssd, Domain]
       # Write updates to sssd_conf
       # unless sssd.conf.miq_orig cp sssd.conf to sssd.conf.miq_orig
       sssd_conf_section_classes.each do |section_class|
-        sssd_conf_initial_contents[section_class.section_name_sym] = section_class.new.update_attribute_values(sssd_conf_initial_contents)
+        section = section_class.new
+        sssd_conf_initial_contents[section.section_name.to_sym] = section.update_attribute_values(sssd_conf_initial_contents)
       end
       sssd_conf_initial_contents
     end

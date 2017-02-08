@@ -1,16 +1,9 @@
 require 'sssd_conf/common'
 
 module MiQLdapToSssd
-  class SssdConfSssd < SssdConfCommon
-    SECTION_NAME = "sssd".freeze
-
-    def self.section_name_sym
-      SECTION_NAME.to_sym
-    end
-
+  class Sssd < Common
     def initialize
-      @section_name = SECTION_NAME
-      @installation_specific_fields = %w(
+      super %w(
         default_domain_suffix
         domains
         sbus_timeout

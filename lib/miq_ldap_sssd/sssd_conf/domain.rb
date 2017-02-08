@@ -1,16 +1,9 @@
 require 'sssd_conf/common'
 
 module MiQLdapToSssd
-  class SssdConfDomain < SssdConfCommon
-    SECTION_NAME = "domain".freeze
-
-    def self.section_name_sym
-      SECTION_NAME.to_sym
-    end
-
+  class Domain < Common
     def initialize
-      @section_name = SECTION_NAME
-      @installation_specific_fields = %w(
+      super %w(
         entry_cache_timeout
         ldap_group_member
         ldap_group_name

@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 # Simulate rubygems adding the top level appliance_console.rb's directory to the path.
-$LOAD_PATH.push(File.dirname(__FILE__))
+$LOAD_PATH.push("#{File.dirname(__FILE__)}/../lib/miq_ldap_sssd")
 
 require 'pp'
 

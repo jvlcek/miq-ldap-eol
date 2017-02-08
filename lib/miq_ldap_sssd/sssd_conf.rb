@@ -6,8 +6,6 @@ $LOAD_PATH.push(File.dirname(__FILE__))
 require 'sssd_conf/domain'
 require 'sssd_conf/sssd'
 
-require 'pp' # JJV REMOVE
-
 module MiQLdapToSssd
   SSSD_CONF_FILE = "/Users/jvlcek/MYJUNK/LANGUAGES/RUBY/EXAMPLES/MIQLDAP_2_SSSD/sssd.conf_POST_AUTHCONFIG".freeze
 
@@ -24,9 +22,7 @@ module MiQLdapToSssd
         sssd_conf_contents[section.section_name.to_sym] = section.update_attribute_values(sssd_conf_contents)
       end
 
-      pp sssd_conf_contents # JJV TODO remove this line
       write_updates(sssd_conf_contents)
-      sssd_conf_contents # JJV TODO remove this line
     end
 
     private

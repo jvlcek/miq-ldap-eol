@@ -16,8 +16,6 @@ require 'sssd_conf/sssd'
 
 module MiQLdapToSssd
   if __FILE__ == $PROGRAM_NAME
-    pp SssdConf.new
-    puts "UPDATE +++ +++ +++ +++ +++ +++"
-    pp SssdConf.new.update
+    SssdConf.new.update
   end
 end

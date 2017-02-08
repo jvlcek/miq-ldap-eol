@@ -8,10 +8,8 @@ require 'pp'
 require 'sssd_conf'
 require 'sssd_conf/domain'
 require 'sssd_conf/sssd'
-
-# JJV require 'sssd_conf/nss'
-# JJV require 'sssd_conf/pam'
-# JJV require 'sssd_conf/ifp'
+require 'sssd_conf/pam'
+require 'sssd_conf/ifp'
 
 
 module MiQLdapToSssd

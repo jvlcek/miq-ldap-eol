@@ -17,7 +17,7 @@ module MiQLdapToSssd
     end
 
     def update
-      [Sssd, Domain].each do |section_class|
+      [Domain, Sssd, Pam, Ifp].each do |section_class|
         section = section_class.new
         sssd_conf_contents[section.section_name.to_sym] = section.update_attribute_values(sssd_conf_contents)
       end

@@ -27,25 +27,29 @@ module MiQLdapToSssd
     end
 
     def entry_cache_timeout
-      "entry_cache_timeout new_value"
+      "600"
     end
 
+    # JJV ? Is this always the same?
     def ldap_group_member
-      "ldap_group_member new_value"
+      "member"
     end
 
+    # JJV ? Is this always the same?
     def ldap_group_name
-      "ldap_group_name new_value"
+      "cn"
     end
 
+    # JJV ? Is this always the same?
     def ldap_group_object_class
-      "ldap_group_object_class new_value"
+      "posixAccount"
     end
 
     def ldap_group_search_base
-      "ldap_group_search_base new_value"
+      "#{miqldap_settings[:basedn]}"
     end
 
+    # JJV START HERE
     def ldap_network_timeout
       "ldap_network_timeout new_value"
     end

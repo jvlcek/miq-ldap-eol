@@ -16,6 +16,7 @@ module MiQLdapToSssd
         ldap_user_extra_attrs
         ldap_user_name
         ldap_user_object_class
+        ldap_user_gid_number
         ldap_user_search_base
         ldap_user_uid_number
       )
@@ -27,59 +28,97 @@ module MiQLdapToSssd
     end
 
     def entry_cache_timeout
-      "entry_cache_timeout new_value"
+      "600"
     end
 
+    # TODO JJV Is this always the same? If not how can I get it?
+    # JJV might be able to leverage ldapsearch:
+    # JJV: ldapsearch -x -H "#{settings[:mode]}://#{settings[:ldaphost].first}:#{settings[:ldapport]}"
     def ldap_group_member
-      "ldap_group_member new_value"
+      "member"
     end
 
+    # TODO JJV Is this always the same? If not how can I get it?
+    # JJV: ldapsearch -x -H "#{settings[:mode]}://#{settings[:ldaphost].first}:#{settings[:ldapport]}"
     def ldap_group_name
-      "ldap_group_name new_value"
+      "cn"
     end
 
+    # TODO JJV Is this always the same? If not how can I get it?
+    # JJV: ldapsearch -x -H "#{settings[:mode]}://#{settings[:ldaphost].first}:#{settings[:ldapport]}"
     def ldap_group_object_class
-      "ldap_group_object_class new_value"
+      "groupOfNames"
     end
 
     def ldap_group_search_base
-      "ldap_group_search_base new_value"
+      settings[:basedn]
     end
 
     def ldap_network_timeout
-      "ldap_network_timeout new_value"
+      "3"
     end
 
     def ldap_pwd_policy
-      "ldap_pwd_policy new_value"
+      "none"
     end
 
     def ldap_tls_cacert
-      "ldap_tls_cacert new_value"
+      settings[:tls_cacert]
     end
 
     def ldap_tls_cacertdir
-      "ldap_tls_cacertdir new_value"
+      settings[:tls_cacertdir]
     end
 
     def ldap_user_extra_attrs
-      "ldap_user_extra_attrs new_value"
+      "mail, givenname, sn, displayname"
     end
 
     def ldap_user_name
-      "ldap_user_name new_value"
+      case settings[:user_type]
+      when "userprincipalname"
+        return "userprincipalname"
+      when "mail"
+        return "mail"
+      when "dn-uid"
+        return "uid"
+      when "dn-cn"
+        "cn"
+      when "samaccountname"
+        return "samaccountname"
+      else
+        raise Exception.new("Invalid user_type ->#{settings[:user_type]}<-")
+      end
     end
 
     def ldap_user_object_class
-      "ldap_user_object_class new_value"
+      # TODO ??? Could this be lPerson, organizationalPerson or posixAccount
+      "posixAccount NEED POSIX ??? TODO ???"
+    end
+
+    def ldap_user_gid_number
+      "gidNumber NEED POSIX ??? TODO ???"
     end
 
     def ldap_user_search_base
-      "ldap_user_search_base new_value"
+      case settings[:user_type]
+      when "userprincipalname"
+        return "??? TODO ???"
+      when "mail"
+        return "??? TODO ???"
+      when "dn-uid"
+        return settings[:user_suffix]
+      when "dn-cn"
+        return settings[:user_suffix]
+      when "samaccountname"
+        return "??? TODO ???"
+      else
+        raise Exception.new("Invalid user_type ->#{settings[:user_type]}<-")
+      end
     end
 
     def ldap_user_uid_number
-      "ldap_user_uid_number new_value"
+      "uidNumber NEED POSIX ??? TODO ???"
     end
   end
 end

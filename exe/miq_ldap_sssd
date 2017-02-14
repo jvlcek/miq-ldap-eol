@@ -4,9 +4,7 @@
 $LOAD_PATH.push("#{File.dirname(__FILE__)}/../lib/miq_ldap_sssd")
 
 require 'pp'
-
 require 'sssd_conf'
-
 
 module MiQLdapToSssd
   if __FILE__ == $PROGRAM_NAME

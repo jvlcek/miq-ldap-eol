@@ -1,17 +1,16 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'miq/ldap/eol/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "miq-ldap-eol"
-  spec.version       = Miq::Ldap::Eol::VERSION
+  spec.version       = "0.0.1"
   spec.authors       = ["Joe VLcek"]
   spec.email         = ["jvlcek@redhat.com"]
 
-  spec.summary       = %q{TODO: Write a short summary, because Rubygems requires one.}
-  spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.summary       = "This script will convert an MiQ appliance configured to use MiqLdap to SSSD"
+  spec.description   = "This script will convert an MiQ appliance configured to use MiqLdap to SSSD"
+  spec.homepage      = "https://github.com/jvlcek/miq-ldap-eol/"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'

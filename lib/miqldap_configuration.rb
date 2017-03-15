@@ -1,3 +1,5 @@
+require 'trollop'
+
 module MiQLdapToSssd
   class MiqLdapConfiguration
 
@@ -32,13 +34,20 @@ module MiQLdapToSssd
 
     end
 
-
     def self.user_provided_settings
       # TODO JJV These settings will be gathered from the user
       # TODO JJV temporary testing data
-      { :tls_cacert                => " /path/to/certificate_dir/cert_file",
-        :tls_cacertdir             => "/path/to/certificate_dir/",
-      }
+
+      opts = Trollop::options do
+        opt :tls_cacert,
+            "Path to certificate file",
+            :short => "-c",
+            :default => "/path/to/certificate_dir/cert_file",
+            :type => :string
+      end 
+
+      opts[:tls_cacertdir] = File.dirname(opts[:tls_cacert])
+      opts
     end
  
   end

@@ -1,4 +1,4 @@
-ource 'https://rubygems.org'
+source 'https://rubygems.org'
 
 # Specify your gem's dependencies in manageiq-gems-pending.gemspec
 gemspec
@@ -6,6 +6,8 @@ gemspec
 # Modified gems (forked on github)
 gem "handsoap", "~>0.2.5", :require => false, :git => "https://github.com/ManageIQ/handsoap.git", :tag => "v0.2.5-5"
 gem "rubywbem",            :require => false, :git => "https://github.com/ManageIQ/rubywbem.git", :branch => "rubywbem_0_1_0"
+
+gem "trollop"
 
 group :test do
   gem "simplecov", :require => false

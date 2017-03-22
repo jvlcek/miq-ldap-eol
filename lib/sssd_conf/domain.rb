@@ -64,17 +64,14 @@ module MiQLdapToSssd
     end
 
     def ldap_tls_cacert
-      puts "JJV #{__method__} initial_settings[:mode]->#{initial_settings[:mode]}<-"
       initial_settings[:mode] == "ldaps" ? initial_settings[:tls_cacert] : nil
     end
 
     def ldap_tls_cacertdir
-      puts "JJV #{__method__} initial_settings[:mode] ->#{initial_settings[:mode]}<-"
       initial_settings[:mode] == "ldaps" ?  initial_settings[:tls_cacertdir] : nil
     end
 
     def ldap_auth_disable_tls_never_use_in_production
-      puts "JJV #{__method__} initial_settings[:mode] ->#{initial_settings[:mode]}<-"
       initial_settings[:mode] == "ldaps" ? false : true
     end
 

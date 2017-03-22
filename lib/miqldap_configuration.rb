@@ -6,16 +6,12 @@ module MiQLdapToSssd
     attr_reader :initial_settings
 
     def initialize
-      puts "JJV Called #{__FILE__} - #{__method__}"
       @initial_settings = current_authentication_settings.merge(user_provided_settings)
     end
 
     def current_authentication_settings
-      puts "JJV Called #{__FILE__} - #{__method__}"
 
       # TODO JJV comment for testing -> ::Settings.authentication.to_hash
-
-      # TODO JJV temporary testing data
       { :basedn                      => "ou=groups,ou=prod,dc=jvlcek,dc=com",
         :bind_dn                     => "cn=Manager,dc=jvlcek,dc=com",
         :bind_pwd                    => "secret",
@@ -39,16 +35,9 @@ module MiQLdapToSssd
         :amazon_role                 => false,
         :ldap_role                   => true
       }
-
-
     end
 
     def user_provided_settings
-      puts "JJV Called #{__FILE__} - #{__method__}"
-
-      # TODO JJV These settings will be gathered from the user
-      # TODO JJV temporary testing data
-
       opts = Trollop::options do
         opt :tls_cacert,
             "Path to certificate file",
@@ -66,6 +55,5 @@ module MiQLdapToSssd
       opts[:tls_cacertdir] = File.dirname(opts[:tls_cacert]) unless opts[:tls_cacert].nil?
       opts
     end
- 
   end
 end

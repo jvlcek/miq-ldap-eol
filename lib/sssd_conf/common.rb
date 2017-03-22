@@ -1,12 +1,13 @@
 require 'miqldap_configuration'
 
 module MiQLdapToSssd
-  class Common
-    attr_reader :installation_specific_fields, :settings
+  class Common < MiqLdapConfiguration
+
+    attr_reader :installation_specific_fields
 
     def initialize(installation_specific_fields)
       @installation_specific_fields = installation_specific_fields
-      @settings = MiqLdapConfiguration::authentication_settings.merge(MiqLdapConfiguration::user_provided_settings)
+      super()
     end
 
     def section_name

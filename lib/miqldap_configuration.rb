@@ -3,10 +3,15 @@ require 'trollop'
 module MiQLdapToSssd
   class MiqLdapConfiguration
 
-    def self.authentication_settings
-      # TODO JJV comment for testing -> ::Settings.authentication.to_hash
+    attr_reader :initial_settings
 
-      # TODO JJV temporary testing data
+    def initialize
+      @initial_settings = current_authentication_settings.merge(user_provided_settings)
+    end
+
+    def current_authentication_settings
+
+      # TODO JJV comment for testing -> ::Settings.authentication.to_hash
       { :basedn                      => "ou=groups,ou=prod,dc=jvlcek,dc=com",
         :bind_dn                     => "cn=Manager,dc=jvlcek,dc=com",
         :bind_pwd                    => "secret",
@@ -30,25 +35,25 @@ module MiQLdapToSssd
         :amazon_role                 => false,
         :ldap_role                   => true
       }
-
-
     end
 
-    def self.user_provided_settings
-      # TODO JJV These settings will be gathered from the user
-      # TODO JJV temporary testing data
-
+    def user_provided_settings
       opts = Trollop::options do
         opt :tls_cacert,
             "Path to certificate file",
             :short => "-c",
-            :default => "/path/to/certificate_dir/cert_file",
+            :default => nil,
+            :type => :string
+
+        opt :ldapbasedn,
+            "The LDAP BaseDN",
+            :short => "-b",
+            :default => nil,
             :type => :string
       end 
 
-      opts[:tls_cacertdir] = File.dirname(opts[:tls_cacert])
+      opts[:tls_cacertdir] = File.dirname(opts[:tls_cacert]) unless opts[:tls_cacert].nil?
       opts
     end
- 
   end
 end

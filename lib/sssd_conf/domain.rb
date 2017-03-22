@@ -13,6 +13,7 @@ module MiQLdapToSssd
         ldap_pwd_policy
         ldap_tls_cacert
         ldap_tls_cacertdir
+        ldap_auth_disable_tls_never_use_in_production
         ldap_user_extra_attrs
         ldap_user_name
         ldap_user_object_class
@@ -33,25 +34,25 @@ module MiQLdapToSssd
 
     # TODO JJV Is this always the same? If not how can I get it?
     # JJV might be able to leverage ldapsearch:
-    # JJV: ldapsearch -x -H "#{settings[:mode]}://#{settings[:ldaphost].first}:#{settings[:ldapport]}"
+    # JJV: ldapsearch -x -H "#{initial_settings[:mode]}://#{initial_settings[:ldaphost].first}:#{initial_settings[:ldapport]}"
     def ldap_group_member
       "member"
     end
 
     # TODO JJV Is this always the same? If not how can I get it?
-    # JJV: ldapsearch -x -H "#{settings[:mode]}://#{settings[:ldaphost].first}:#{settings[:ldapport]}"
+    # JJV: ldapsearch -x -H "#{initial_settings[:mode]}://#{initial_settings[:ldaphost].first}:#{initial_settings[:ldapport]}"
     def ldap_group_name
       "cn"
     end
 
     # TODO JJV Is this always the same? If not how can I get it?
-    # JJV: ldapsearch -x -H "#{settings[:mode]}://#{settings[:ldaphost].first}:#{settings[:ldapport]}"
+    # JJV: ldapsearch -x -H "#{initial_settings[:mode]}://#{initial_settings[:ldaphost].first}:#{initial_settings[:ldapport]}"
     def ldap_group_object_class
       "groupOfNames"
     end
 
     def ldap_group_search_base
-      settings[:basedn]
+      initial_settings[:basedn]
     end
 
     def ldap_network_timeout
@@ -63,11 +64,15 @@ module MiQLdapToSssd
     end
 
     def ldap_tls_cacert
-      settings[:tls_cacert]
+      initial_settings[:mode] == "ldaps" ? initial_settings[:tls_cacert] : nil
     end
 
     def ldap_tls_cacertdir
-      settings[:tls_cacertdir]
+      initial_settings[:mode] == "ldaps" ?  initial_settings[:tls_cacertdir] : nil
+    end
+
+    def ldap_auth_disable_tls_never_use_in_production
+      initial_settings[:mode] == "ldaps" ? false : true
     end
 
     def ldap_user_extra_attrs
@@ -75,7 +80,7 @@ module MiQLdapToSssd
     end
 
     def ldap_user_name
-      case settings[:user_type]
+      case initial_settings[:user_type]
       when "userprincipalname"
         return "userprincipalname"
       when "mail"
@@ -87,7 +92,7 @@ module MiQLdapToSssd
       when "samaccountname"
         return "samaccountname"
       else
-        raise Exception.new("Invalid user_type ->#{settings[:user_type]}<-")
+        raise Exception.new("Invalid user_type ->#{initial_settings[:user_type]}<-")
       end
     end
 
@@ -101,19 +106,19 @@ module MiQLdapToSssd
     end
 
     def ldap_user_search_base
-      case settings[:user_type]
+      case initial_settings[:user_type]
       when "userprincipalname"
         return "??? TODO ???"
       when "mail"
         return "??? TODO ???"
       when "dn-uid"
-        return settings[:user_suffix]
+        return initial_settings[:user_suffix]
       when "dn-cn"
-        return settings[:user_suffix]
+        return initial_settings[:user_suffix]
       when "samaccountname"
         return "??? TODO ???"
       else
-        raise Exception.new("Invalid user_type ->#{settings[:user_type]}<-")
+        raise Exception.new("Invalid user_type ->#{initial_settings[:user_type]}<-")
       end
     end
 

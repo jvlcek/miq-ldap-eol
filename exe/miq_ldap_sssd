@@ -4,10 +4,13 @@
 $LOAD_PATH.push("#{File.dirname(__FILE__)}/../lib")
 
 require 'pp'
+require 'authconfig'
 require 'sssd_conf'
 
 module MiQLdapToSssd
   if __FILE__ == $PROGRAM_NAME
+    MiqLdapAuthConfig.new.run_auth_config
+
     SssdConf.new.update
   end
 end

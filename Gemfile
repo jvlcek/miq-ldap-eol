@@ -8,6 +8,7 @@ gem "handsoap", "~>0.2.5", :require => false, :git => "https://github.com/Manage
 gem "rubywbem",            :require => false, :git => "https://github.com/ManageIQ/rubywbem.git", :branch => "rubywbem_0_1_0"
 
 gem "trollop"
+gem "awesome_spawn"
 
 group :test do
   gem "simplecov", :require => false

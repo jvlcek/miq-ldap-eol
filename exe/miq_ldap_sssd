@@ -8,9 +8,16 @@ require 'authconfig'
 require 'sssd_conf'
 
 module MiQLdapToSssd
-  if __FILE__ == $PROGRAM_NAME
-    MiqLdapAuthConfig.new.run_auth_config
+  LOGGER = Logger.new('miq_ldap_to_sssd.log')
 
-    SssdConf.new.update
+  LOGGER.formatter = proc do |severity, time, progname, msg|
+    "[#{time}] #{severity}: #{msg}\n"
+  end
+
+  if __FILE__ == $PROGRAM_NAME
+    LOGGER.debug("Running #{$PROGRAM_NAME}")
+    initial_settings = MiqLdapConfiguration.initial_settings
+    MiqLdapAuthConfig.new(initial_settings).run_auth_config
+    SssdConf.new(initial_settings).update
   end
 end

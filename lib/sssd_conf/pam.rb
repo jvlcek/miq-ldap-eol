@@ -2,7 +2,7 @@ require 'sssd_conf/common'
 
 module MiQLdapToSssd
   class Pam < Common
-    def initialize
+    def initialize(_initial_settings)
       super %w(default_domain_suffix)
     end
 

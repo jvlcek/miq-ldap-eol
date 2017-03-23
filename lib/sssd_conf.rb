@@ -7,15 +7,18 @@ module MiQLdapToSssd
   SSSD_CONF_FILE = "/Users/jvlcek/MYJUNK/LANGUAGES/RUBY/EXAMPLES/MIQLDAP_2_SSSD/sssd.conf_POST_AUTHCONFIG".freeze
 
   class SssdConf
-    attr_accessor :sssd_conf_contents
+    attr_reader :initial_settings, :sssd_conf_contents
 
-    def initialize
+    def initialize(initial_sttings)
+      @initial_settings = initial_sttings
       @sssd_conf_contents = sssd_conf2hash
     end
 
     def update
+      LOGGER.debug("Invokded #{self.class}\##{__method__}")
+
       [Domain, Sssd, Pam, Ifp].each do |section_class|
-        section = section_class.new
+        section = section_class.new(initial_settings)
         sssd_conf_contents[section.section_name.to_sym] = section.update_attribute_values(sssd_conf_contents)
       end
 

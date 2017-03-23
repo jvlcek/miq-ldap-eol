@@ -2,7 +2,11 @@ require 'sssd_conf/common'
 
 module MiQLdapToSssd
   class Domain < Common
-    def initialize
+    attr_reader :initial_settings
+
+    def initialize(initial_settings)
+      @initial_settings = initial_settings
+
       super %w(
         entry_cache_timeout
         ldap_group_member
@@ -97,12 +101,12 @@ module MiQLdapToSssd
     end
 
     def ldap_user_object_class
-      # TODO ??? Could this be lPerson, organizationalPerson or posixAccount
-      "posixAccount NEED POSIX ??? TODO ???"
+      # TODO ??? Could this be Person, organizationalPerson or posixAccount
+      "posixAccount"
     end
 
     def ldap_user_gid_number
-      "gidNumber NEED POSIX ??? TODO ???"
+      "gidNumber"
     end
 
     def ldap_user_search_base
@@ -123,7 +127,7 @@ module MiQLdapToSssd
     end
 
     def ldap_user_uid_number
-      "uidNumber NEED POSIX ??? TODO ???"
+      "uidNumber"
     end
   end
 end

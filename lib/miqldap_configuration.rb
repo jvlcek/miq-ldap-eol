@@ -1,15 +1,23 @@
 require 'trollop'
 
 module MiQLdapToSssd
+  class MiqLdapToSssdArgumentError < StandardError; end
+  class MiqLdapToSssdError < StandardError; end
+
   class MiqLdapConfiguration
 
-    attr_reader :initial_settings
+    def self.initial_settings
+      initial_settings = current_authentication_settings.merge(user_provided_settings)
+      if initial_settings[:mode] == "ldaps" && initial_settings[:tls_cacert].nil?
+        LOGGER.fatal("Unprovided TLS certificate are required when mode is ldaps")
+        raise MiqLdapToSssdArgumentError.new "TLS certificate were not provided and are required when mode is ldaps"
+      end
 
-    def initialize
-      @initial_settings = current_authentication_settings.merge(user_provided_settings)
+      initial_settings
     end
 
-    def current_authentication_settings
+    def self.current_authentication_settings
+      LOGGER.debug("Invokded #{self.class}\##{__method__}")
 
       # TODO JJV comment for testing -> ::Settings.authentication.to_hash
       { :basedn                      => "ou=groups,ou=prod,dc=jvlcek,dc=com",
@@ -37,7 +45,9 @@ module MiQLdapToSssd
       }
     end
 
-    def user_provided_settings
+    def self.user_provided_settings
+      LOGGER.debug("Invokded #{self.class}\##{__method__}")
+
       opts = Trollop::options do
         opt :tls_cacert,
             "Path to certificate file",

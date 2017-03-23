@@ -1,13 +1,12 @@
 require 'miqldap_configuration'
 
 module MiQLdapToSssd
-  class Common < MiqLdapConfiguration
+  class Common
 
     attr_reader :installation_specific_fields
 
     def initialize(installation_specific_fields)
       @installation_specific_fields = installation_specific_fields
-      super()
     end
 
     def section_name

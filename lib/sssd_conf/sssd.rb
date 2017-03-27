@@ -12,11 +12,11 @@ module MiQLdapToSssd
     end
 
     def default_domain_suffix
-      "new_value default_domain_suffix"
+      "default_domain_suffix"
     end
 
     def domains
-      "new_value domains"
+      "domains"
     end
 
     def sbus_timeout

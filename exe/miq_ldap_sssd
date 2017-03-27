@@ -17,6 +17,8 @@ module MiQLdapToSssd
   if __FILE__ == $PROGRAM_NAME
     LOGGER.debug("Running #{$PROGRAM_NAME}")
     initial_settings = MiqLdapConfiguration.initial_settings
+    LOGGER.debug("Initial Settings #{initial_settings}")
+    pp initial_settings
     MiqLdapAuthConfig.new(initial_settings).run_auth_config
     SssdConf.new(initial_settings).update
   end

@@ -7,7 +7,7 @@ module MiQLdapToSssd
     end
 
     def default_domain_suffix
-      "new_value default_domain_suffix"
+      "default_domain_suffix"
     end
   end
 end

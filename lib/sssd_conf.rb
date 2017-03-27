@@ -4,7 +4,7 @@ require 'sssd_conf/pam'
 require 'sssd_conf/ifp'
 
 module MiQLdapToSssd
-  SSSD_CONF_FILE = "/Users/jvlcek/MYJUNK/LANGUAGES/RUBY/EXAMPLES/MIQLDAP_2_SSSD/sssd.conf_POST_AUTHCONFIG".freeze
+  SSSD_CONF_FILE = "/etc/sssd/sssd.conf".freeze
 
   class SssdConf
     attr_reader :initial_settings, :sssd_conf_contents

@@ -14,7 +14,7 @@ module MiQLdapToSssd
       LOGGER.debug("Invokded #{self.class}\##{__method__}")
       params = {
         :ldapserver=        => "#{initial_settings[:mode]}://#{initial_settings[:ldaphost][0]}:#{initial_settings[:ldapport]}",
-        :ldapbasedn=        => "#{initial_settings[:ldapbasedn]}",
+        :ldapbasedn=        => "#{initial_settings[:basedn].split(",").collect { |p| p.split('=')[1] }.join('.')}",
         :enablesssd         => nil,
         :enablesssdauth     => nil,
         :enablelocauthorize => nil,
@@ -27,7 +27,12 @@ module MiQLdapToSssd
       }
 
       result = AwesomeSpawn.run("authconfig", :params => params)
-      puts result.error if result.failure?
+
+      if result.failure?
+        error_message = "authconfig failed with: #{result.error}"
+        LOGGER.fatal(error_message)
+        raise MiqLdapToSssdArgumentError.new error_message
+      end
     end
   end
 end

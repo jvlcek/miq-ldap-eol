@@ -20,7 +20,7 @@ module MiQLdapToSssd
     def self.current_authentication_settings
       LOGGER.debug("Invokded #{self.class}\##{__method__}")
 
-      settings = ::Settings.authentication.to_hash
+      settings = Settings.authentication.to_hash
       LOGGER.debug("Current authentication settings: #{settings}")
 
       settings
@@ -35,13 +35,7 @@ module MiQLdapToSssd
             :short => "-c",
             :default => nil,
             :type => :string
-
-        opt :ldapbasedn,
-            "The LDAP BaseDN",
-            :short => "-b",
-            :default => nil,
-            :type => :string
-      end 
+      end
 
       opts[:tls_cacertdir] = File.dirname(opts[:tls_cacert]) unless opts[:tls_cacert].nil?
       LOGGER.debug("User provided settings: #{opts}")

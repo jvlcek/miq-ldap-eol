@@ -29,7 +29,7 @@ module MiQLdapToSssd
 
     # Domain is a special case because the section title is updated from [domain/default] to [doamin/<new domain>]
     def self.update_domain_value
-      "domain/my_domain.com"
+      "domain/#{initial_settings[:basedn].split(",").collect { |p| p.split('=')[1] }.join('.')}"
     end
 
     def entry_cache_timeout

@@ -7,7 +7,7 @@ module MiQLdapToSssd
     end
 
     def default_domain_suffix
-      initial_settings[:basedn].split(",").collect { |p| p.split('=')[1] }.join('.')
+      initial_settings[:basedn_domain]
     end
 
     def allowed_uids

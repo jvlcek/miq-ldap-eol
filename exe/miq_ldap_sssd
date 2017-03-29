@@ -23,5 +23,6 @@ module MiQLdapToSssd
     MiqLdapAuthConfig.new(initial_settings).run_auth_config
     SssdConf.new(initial_settings).update
     MiqLdapApacheConfig.new(initial_settings).configure
+    MiqLdapSELinuxConfig.new(initial_settings).configure
   end
 end

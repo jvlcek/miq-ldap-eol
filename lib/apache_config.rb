@@ -6,8 +6,8 @@ module MiQLdapToSssd
 
   class MiqLdapApacheConfig
     TEMPLATE_DIR = "/var/www/miq/system/TEMPLATE".freeze
-    HTTPD_CONF_DIR = "/etc/httpd/conf.d"
-    PAM_CONF_DIR = "/etc/pam.d"
+    HTTPD_CONF_DIR = "/etc/httpd/conf.d".freeze
+    PAM_CONF_DIR = "/etc/pam.d".freeze
 
     attr_reader :initial_settings
 

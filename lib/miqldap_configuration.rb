@@ -2,7 +2,6 @@ require 'trollop'
 
 module MiQLdapToSssd
   class MiqLdapToSssdArgumentError < StandardError; end
-  class MiqLdapToSssdError < StandardError; end
 
   class MiqLdapConfiguration
 
@@ -13,6 +12,9 @@ module MiQLdapToSssd
         LOGGER.fatal("Unprovided TLS certificate are required when mode is ldaps")
         raise MiqLdapToSssdArgumentError.new "TLS certificate were not provided and are required when mode is ldaps"
       end
+
+      # Munge the basedn once for use in multiple places for the basedn domain name.
+      initial_settings[:basedn_domain] = initial_settings[:basedn].split(",").collect { |p| p.split('=')[1] }.join('.')
 
       initial_settings
     end

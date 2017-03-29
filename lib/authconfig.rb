@@ -14,7 +14,7 @@ module MiQLdapToSssd
       LOGGER.debug("Invokded #{self.class}\##{__method__}")
       params = {
         :ldapserver=        => "#{initial_settings[:mode]}://#{initial_settings[:ldaphost][0]}:#{initial_settings[:ldapport]}",
-        :ldapbasedn=        => initial_settings[:basedn_domain]
+        :ldapbasedn=        => initial_settings[:basedn_domain],
         :enablesssd         => nil,
         :enablesssdauth     => nil,
         :enablelocauthorize => nil,

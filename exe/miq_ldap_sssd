@@ -3,9 +3,13 @@
 # Simulate rubygems adding the top level appliance_console.rb's directory to the path.
 $LOAD_PATH.push("#{File.dirname(__FILE__)}/../lib")
 
-require 'pp'
 require 'authconfig'
+require 'configure_apache'
+require 'configure_selinux'
+require 'miqldap_configuration'
 require 'sssd_conf'
+
+require 'pp' # JJV Remove
 
 module MiQLdapToSssd
   LOGGER = Logger.new('miq_ldap_to_sssd.log')
@@ -22,7 +26,7 @@ module MiQLdapToSssd
     pp initial_settings # JJV Remove
     MiqLdapAuthConfig.new(initial_settings).run_auth_config
     SssdConf.new(initial_settings).update
-    MiqLdapApacheConfig.new(initial_settings).configure
-    MiqLdapSELinuxConfig.new(initial_settings).configure
+    MiqLdapConfigureApache.new(initial_settings).configure
+    MiqLdapConfigureSELinux.new(initial_settings).configure
   end
 end

@@ -9,6 +9,7 @@ gem "rubywbem",            :require => false, :git => "https://github.com/Manage
 
 gem "trollop"
 gem "awesome_spawn"
+gem "linux_admin"
 
 group :test do
   gem "simplecov", :require => false

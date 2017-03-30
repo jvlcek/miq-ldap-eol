@@ -22,11 +22,6 @@ module MiQLdapToSssd
                ldap_user_uid_number), initial_settings)
     end
 
-    # Domain is a special case because the section title is updated from [domain/default] to [doamin/<new domain>]
-    def self.update_domain_value
-      "domain/#{initial_settings[:basedn_domain]}"
-    end
-
     def entry_cache_timeout
       "600"
     end

@@ -2,13 +2,11 @@ require 'sssd_conf/common'
 
 module MiQLdapToSssd
   class Sssd < Common
-    def initialize(_initial_settings)
-      super %w(
-        default_domain_suffix
-        domains
-        sbus_timeout
-        services
-      )
+    def initialize(initial_settings)
+      super(%w(default_domain_suffix
+               domains
+               sbus_timeout
+               services), initial_settings)
     end
 
     def default_domain_suffix

@@ -2,8 +2,8 @@ require 'sssd_conf/common'
 
 module MiQLdapToSssd
   class Ifp < Common
-    def initialize(_initial_settings)
-      super %w(default_domain_suffix allowed_uids user_attributes)
+    def initialize(initial_settings)
+      super(%w(default_domain_suffix allowed_uids user_attributes), initial_settings)
     end
 
     def default_domain_suffix

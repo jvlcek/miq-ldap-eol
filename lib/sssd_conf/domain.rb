@@ -2,29 +2,24 @@ require 'sssd_conf/common'
 
 module MiQLdapToSssd
   class Domain < Common
-    attr_reader :initial_settings
 
     def initialize(initial_settings)
-      @initial_settings = initial_settings
-
-      super %w(
-        entry_cache_timeout
-        ldap_group_member
-        ldap_group_name
-        ldap_group_object_class
-        ldap_group_search_base
-        ldap_network_timeout
-        ldap_pwd_policy
-        ldap_tls_cacert
-        ldap_tls_cacertdir
-        ldap_auth_disable_tls_never_use_in_production
-        ldap_user_extra_attrs
-        ldap_user_name
-        ldap_user_object_class
-        ldap_user_gid_number
-        ldap_user_search_base
-        ldap_user_uid_number
-      )
+      super(%w(entry_cache_timeout
+               ldap_group_member
+               ldap_group_name
+               ldap_group_object_class
+               ldap_group_search_base
+               ldap_network_timeout
+               ldap_pwd_policy
+               ldap_tls_cacert
+               ldap_tls_cacertdir
+               ldap_auth_disable_tls_never_use_in_production
+               ldap_user_extra_attrs
+               ldap_user_name
+               ldap_user_object_class
+               ldap_user_gid_number
+               ldap_user_search_base
+               ldap_user_uid_number), initial_settings)
     end
 
     # Domain is a special case because the section title is updated from [domain/default] to [doamin/<new domain>]

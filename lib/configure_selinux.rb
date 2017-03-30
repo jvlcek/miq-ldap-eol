@@ -12,8 +12,8 @@ module MiQLdapToSssd
 
     def configure
       LOGGER.debug("Invokded #{self.class}\##{__method__}")
-      enable_nan_standard_ldap_port("10636")
-      enable_nan_standard_ldap_port("10389")
+      enable_non_standard_ldap_port("10636")
+      enable_non_standard_ldap_port("10389")
 
       set_permission("allow_httpd_mod_auth_pam")
       set_permission("httpd_dbus_sssd")

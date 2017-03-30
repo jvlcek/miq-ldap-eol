@@ -65,7 +65,7 @@ module MiQLdapToSssd
 
           # Domain is a special case because the section title is updated from [domain/default] to [doamin/<new domain>]
           if section == :domain
-            f.write("\n[#{Domain.update_domain_value}]\n")
+            f.write("\n[domain/#{initial_settings[:basedn_domain]}]\n")
           else
             f.write("\n[#{section.to_s}]\n")
           end

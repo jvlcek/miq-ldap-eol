@@ -1,10 +1,9 @@
-require 'miqldap_configuration'
 require 'awesome_spawn'
 
 module MiQLdapToSssd
-  class MiqLdapToSssdSELinuxConfigError < StandardError; end
+  class MiqLdapToSssdConfigureSELinuxError < StandardError; end
 
-  class MiqLdapSELinuxConfig
+  class MiqLdapConfigureSELinux
     attr_reader :initial_settings
 
     def initialize(initial_sttings)
@@ -37,7 +36,7 @@ module MiQLdapToSssd
       if result.failure?
         error_message = "semanage failed with: #{result.error}"
         LOGGER.fatal(error_message)
-        raise MiqLdapToSssdSELinuxConfigError.new error_message
+        raise MiqLdapToSssdConfigureSELinuxError.new error_message
       end
     end
 
@@ -51,7 +50,7 @@ module MiQLdapToSssd
       if result.failure?
         error_message = "setsebool failed with: #{result.error}"
         LOGGER.fatal(error_message)
-        raise MiqLdapToSssdSELinuxConfigError.new error_message
+        raise MiqLdapToSssdConfigureSELinuxError.new error_message
       end
     end
 

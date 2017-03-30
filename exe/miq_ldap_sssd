@@ -28,5 +28,6 @@ module MiQLdapToSssd
     SssdConf.new(initial_settings).update
     MiqLdapConfigureApache.new(initial_settings).configure
     MiqLdapConfigureSELinux.new(initial_settings).configure
+    MiqLdapServices.restart
   end
 end

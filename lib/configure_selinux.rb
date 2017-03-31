@@ -1,9 +1,9 @@
 require 'awesome_spawn'
 
 module MiQLdapToSssd
-  class MiqLdapToSssdConfigureSELinuxError < StandardError; end
+  class ConfigureSELinuxError < StandardError; end
 
-  class MiqLdapConfigureSELinux
+  class ConfigureSELinux
     attr_reader :initial_settings
 
     def initialize(initial_sttings)
@@ -32,25 +32,27 @@ module MiQLdapToSssd
       }
 
       result = AwesomeSpawn.run("semanage", :params => params)
+      LOGGER.debug("Ran command: #{result.command_line}")
 
       if result.failure?
         error_message = "semanage failed with: #{result.error}"
         LOGGER.fatal(error_message)
-        raise MiqLdapToSssdConfigureSELinuxError.new error_message
+        raise ConfigureSELinuxError.new error_message
       end
     end
 
     def set_permission(permission_name)
-      LOGGER.debug("Invokded #{self.class}\##{__method__}")
+      LOGGER.debug("Invokded #{self.class}\##{__method__}(#{permission_name})")
 
       params = {:P => [permission_name, "on"] }
 
       result = AwesomeSpawn.run("setsebool", :params => params)
+      LOGGER.debug("Ran command: #{result.command_line}")
 
       if result.failure?
         error_message = "setsebool failed with: #{result.error}"
         LOGGER.fatal(error_message)
-        raise MiqLdapToSssdConfigureSELinuxError.new error_message
+        raise ConfigureSELinuxError.new error_message
       end
     end
 

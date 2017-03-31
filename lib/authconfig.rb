@@ -2,7 +2,9 @@ require 'awesome_spawn'
 require 'miqldap_configuration'
 
 module MiQLdapToSssd
-  class MiqLdapAuthConfig
+  class AuthConfigError < StandardError; end
+
+  class AuthConfig
 
     attr_reader :initial_settings
 
@@ -14,7 +16,7 @@ module MiQLdapToSssd
       LOGGER.debug("Invokded #{self.class}\##{__method__}")
       params = {
         :ldapserver=        => "#{initial_settings[:mode]}://#{initial_settings[:ldaphost][0]}:#{initial_settings[:ldapport]}",
-        :ldapbasedn=        => initial_settings[:basedn_domain],
+        :ldapbasedn=        => initial_settings[:basedn],
         :enablesssd         => nil,
         :enablesssdauth     => nil,
         :enablelocauthorize => nil,
@@ -27,11 +29,12 @@ module MiQLdapToSssd
       }
 
       result = AwesomeSpawn.run("authconfig", :params => params)
+      LOGGER.debug("Ran command: #{result.command_line}")
 
       if result.failure?
         error_message = "authconfig failed with: #{result.error}"
         LOGGER.fatal(error_message)
-        raise MiqLdapToSssdArgumentError.new error_message
+        raise AuthConfigError.new error_message
       end
     end
   end

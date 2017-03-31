@@ -24,10 +24,11 @@ module MiQLdapToSssd
     initial_settings = MiqLdapConfiguration.initial_settings
     LOGGER.debug("Initial Settings #{initial_settings}")
     pp initial_settings # JJV Remove
-    MiqLdapAuthConfig.new(initial_settings).run_auth_config
+    AuthConfig.new(initial_settings).run_auth_config
     SssdConf.new(initial_settings).update
-    MiqLdapConfigureApache.new(initial_settings).configure
-    MiqLdapConfigureSELinux.new(initial_settings).configure
-    MiqLdapServices.restart
+    ConfigureSssdRules.disable_tls if initial_settings[:mode] == "ldap"
+    ConfigureApache.new(initial_settings).configure
+    ConfigureSELinux.new(initial_settings).configure
+    Services.restart
   end
 end

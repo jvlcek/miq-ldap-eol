@@ -1,9 +1,9 @@
 require 'fileutils'
 
 module MiQLdapToSssd
-  class MiqLdapToSssdConfigureApacheError < StandardError; end
+  class ConfigureApacheError < StandardError; end
 
-  class MiqLdapConfigureApache
+  class ConfigureApache
     TEMPLATE_DIR = "/var/www/miq/system/TEMPLATE".freeze
     HTTPD_CONF_DIR = "/etc/httpd/conf.d".freeze
     PAM_CONF_DIR = "/etc/pam.d".freeze
@@ -31,7 +31,7 @@ module MiQLdapToSssd
         FileUtils.cp("#{TEMPLATE_DIR}#{HTTPD_CONF_DIR}/manageiq-external-auth.conf.erb", "#{HTTPD_CONF_DIR}/manageiq-external-auth.conf")
       rescue Errno::ENOENT => err
         LOGGER.fatal(err.message)
-        raise MiqLdapToSssdConfigureApacheError.new err.message
+        raise ConfigureApacheError.new err.message
       end
     end
 
@@ -44,7 +44,7 @@ module MiQLdapToSssd
         File.write("#{HTTPD_CONF_DIR}/manageiq-external-auth.conf", miq_ext_auth)
       rescue Errno::ENOENT => err
         LOGGER.fatal(err.message)
-        raise MiqLdapToSssdConfigureApacheError.new err.message
+        raise ConfigureApacheError.new err.message
       end
     end
 

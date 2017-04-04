@@ -62,7 +62,7 @@ module MiQLdapToSssd
     end
 
     def ldap_tls_cacertdir
-      initial_settings[:mode] == "ldaps" ?  initial_settings[:tls_cacertdir] : nil
+      initial_settings[:mode] == "ldaps" ?  initial_settings[:tls_cacertdir] : "/etc/openldap/cacerts/"
     end
 
     def ldap_auth_disable_tls_never_use_in_production

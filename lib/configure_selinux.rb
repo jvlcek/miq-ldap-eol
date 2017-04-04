@@ -36,6 +36,8 @@ module MiQLdapToSssd
 
       if result.failure?
         error_message = "semanage failed with: #{result.error}"
+        return if error_message.include?("already defined")
+
         LOGGER.fatal(error_message)
         raise ConfigureSELinuxError.new error_message
       end

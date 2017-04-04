@@ -11,7 +11,7 @@ module MiQLdapToSssd
 
       message = "Converting from unsecured LDAP authentication to SSSD. This is dangerous. Passwords are not encrypted"
       say(message)
-      LOGGER.warn(message)
+      LOGGER.warning(message)
 
       begin
         open(CFG_RULES_FILE, 'a') do |f|

@@ -5,6 +5,7 @@ $LOAD_PATH.push("#{File.dirname(__FILE__)}/../lib")
 
 require 'authconfig'
 require 'configure_apache'
+require 'configure_appliance_settings'
 require 'configure_selinux'
 require 'configure_sssd_rules'
 require 'miqldap_configuration'
@@ -40,5 +41,6 @@ module MiQLdapToSssd
     ConfigureApache.new(initial_settings).configure
     ConfigureSELinux.new(initial_settings).configure
     Services.restart
+    ConfigureApplianceSettings.new(initial_settings).configure
   end
 end

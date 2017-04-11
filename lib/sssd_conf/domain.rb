@@ -91,8 +91,7 @@ module MiQLdapToSssd
     end
 
     def ldap_user_object_class
-      # TODO ??? Could this be Person, organizationalPerson or posixAccount
-      "posixAccount"
+      "person"
     end
 
     def ldap_user_gid_number

@@ -10,6 +10,9 @@ module MiQLdapToSssd
 
       if initial_settings[:mode] == "ldaps" && initial_settings[:tls_cacert].nil?
         LOGGER.fatal("Unprovided TLS certificate are required when mode is ldaps")
+
+        # TODO: May not want to raise an exception and produce a backtrace here.
+        #       May simpley want to puts the error and exit.
         raise MiqLdapConfigurationArgumentError.new "TLS certificate were not provided and are required when mode is ldaps"
       end
 

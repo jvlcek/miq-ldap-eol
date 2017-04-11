@@ -1,6 +1,5 @@
 require 'sssd_conf/domain'
 require 'sssd_conf/sssd'
-require 'sssd_conf/pam'
 require 'sssd_conf/ifp'
 
 module MiQLdapToSssd
@@ -17,7 +16,7 @@ module MiQLdapToSssd
     def update
       LOGGER.debug("Invokded #{self.class}\##{__method__}")
 
-      [Domain, Sssd, Pam, Ifp].each do |section_class|
+      [Domain, Sssd, Ifp].each do |section_class|
         section = section_class.new(initial_settings)
         sssd_conf_contents[section.section_name.to_sym] = section.update_attribute_values(sssd_conf_contents)
       end
@@ -62,10 +61,9 @@ module MiQLdapToSssd
     def write_updates(sssd_conf_contents)
       File.open(SSSD_CONF_FILE, "w") do |f|
         sssd_conf_contents.each do |section, values|
-
-          # Domain is a special case because the section title is updated from [domain/default] to [doamin/<new domain>]
           if section == :domain
             f.write("\n[domain/#{initial_settings[:basedn_domain]}]\n")
+            f.write("\n[application/#{initial_settings[:basedn_domain]}]\n")
           else
             f.write("\n[#{section.to_s}]\n")
           end

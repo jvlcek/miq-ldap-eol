@@ -1,6 +1,7 @@
 require 'sssd_conf/domain'
-require 'sssd_conf/sssd'
 require 'sssd_conf/ifp'
+require 'sssd_conf/pam'
+require 'sssd_conf/sssd'
 
 module MiQLdapToSssd
   SSSD_CONF_FILE = "/etc/sssd/sssd.conf".freeze
@@ -16,7 +17,7 @@ module MiQLdapToSssd
     def update
       LOGGER.debug("Invokded #{self.class}\##{__method__}")
 
-      [Domain, Sssd, Ifp].each do |section_class|
+      [Domain, Sssd, Pam, Ifp].each do |section_class|
         section = section_class.new(initial_settings)
         sssd_conf_contents[section.section_name.to_sym] = section.update_attribute_values(sssd_conf_contents)
       end

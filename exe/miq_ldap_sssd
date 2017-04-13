@@ -42,5 +42,8 @@ module MiQLdapToSssd
     ConfigureSELinux.new(initial_settings).configure
     Services.restart
     ConfigureApplianceSettings.new(initial_settings).configure
+
+    LOGGER.debug("#{$PROGRAM_NAME} Conversion Completed")
+    say("#{$PROGRAM_NAME} Conversion Completed")
   end
 end

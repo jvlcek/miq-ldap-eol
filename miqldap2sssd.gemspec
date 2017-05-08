@@ -3,14 +3,14 @@ lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
 Gem::Specification.new do |spec|
-  spec.name          = "miq-ldap-eol"
+  spec.name          = "miqldap2sssd"
   spec.version       = "0.0.1"
   spec.authors       = ["Joe VLcek"]
   spec.email         = ["jvlcek@redhat.com"]
 
   spec.summary       = "This script will convert an MiQ appliance configured to use MiqLdap to SSSD"
   spec.description   = "This script will convert an MiQ appliance configured to use MiqLdap to SSSD"
-  spec.homepage      = "https://github.com/jvlcek/miq-ldap-eol/"
+  spec.homepage      = "https://github.com/jvlcek/miqldap2sssd/"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'

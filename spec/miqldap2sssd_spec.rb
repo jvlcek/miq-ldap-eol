@@ -1,8 +1,8 @@
 require "spec_helper"
 
-RSpec.describe Miq::Ldap::Eol do
+RSpec.describe MiqLdap2Sssd do
   it "has a version number" do
-    expect(Miq::Ldap::Eol::VERSION).not_to be nil
+    expect(MiqLdap2Sssd::VERSION).not_to be nil
   end
 
   it "does something useful" do

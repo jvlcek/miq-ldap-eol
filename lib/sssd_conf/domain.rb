@@ -5,25 +5,40 @@ module MiQLdapToSssd
 
     def initialize(initial_settings)
       super(%w(entry_cache_timeout
+               ldap_auth_disable_tls_never_use_in_production
+               ldap_default_bind_dn
+               ldap_default_authtok
                ldap_group_member
                ldap_group_name
                ldap_group_object_class
                ldap_group_search_base
                ldap_network_timeout
                ldap_pwd_policy
+               ldap_schema
                ldap_tls_cacert
                ldap_tls_cacertdir
-               ldap_auth_disable_tls_never_use_in_production
                ldap_user_extra_attrs
+               ldap_user_gid_number
                ldap_user_name
                ldap_user_object_class
-               ldap_user_gid_number
                ldap_user_search_base
                ldap_user_uid_number), initial_settings)
     end
 
     def entry_cache_timeout
       "600"
+    end
+
+    def ldap_auth_disable_tls_never_use_in_production
+      initial_settings[:mode] == "ldaps" ? false : true
+    end
+
+    def ldap_default_bind_dn
+      initial_settings[:bind_dn]
+    end
+
+    def ldap_default_authtok
+      initial_settings[:bind_pwd]
     end
 
     # TODO JJV Is this always the same? If not how can I get it?
@@ -57,6 +72,17 @@ module MiQLdapToSssd
       "none"
     end
 
+    def ldap_schema
+      case initial_settings[:user_type]
+      when "userprincipalname", "mail", "samaccountname"
+        return "AD"
+      when "dn-uid", "dn-cn"
+        return "rfc2307bis"
+      else
+        raise Exception.new("Invalid user_type ->#{initial_settings[:user_type]}<-")
+      end
+    end
+
     def ldap_tls_cacert
       initial_settings[:mode] == "ldaps" ? initial_settings[:tls_cacert] : nil
     end
@@ -65,12 +91,19 @@ module MiQLdapToSssd
       initial_settings[:mode] == "ldaps" ?  initial_settings[:tls_cacertdir] : "/etc/openldap/cacerts/"
     end
 
-    def ldap_auth_disable_tls_never_use_in_production
-      initial_settings[:mode] == "ldaps" ? false : true
-    end
-
     def ldap_user_extra_attrs
       "mail, givenname, sn, displayname"
+    end
+
+    def ldap_user_gid_number
+      case initial_settings[:user_type]
+      when "userprincipalname", "mail", "samaccountname"
+        return "primaryGroupID"
+      when "dn-uid", "dn-cn"
+        return "gidNumber"
+      else
+        raise Exception.new("Invalid user_type ->#{initial_settings[:user_type]}<-")
+      end
     end
 
     def ldap_user_name
@@ -94,22 +127,12 @@ module MiQLdapToSssd
       "person"
     end
 
-    def ldap_user_gid_number
-      "gidNumber"
-    end
-
     def ldap_user_search_base
       case initial_settings[:user_type]
-      when "userprincipalname"
-        return "??? TODO ???"
-      when "mail"
-        return "??? TODO ???"
-      when "dn-uid"
+      when "userprincipalname", "samaccountname", "mail"
+        return initial_settings[:basedn]
+      when "dn-uid", "dn-cn"
         return initial_settings[:user_suffix]
-      when "dn-cn"
-        return initial_settings[:user_suffix]
-      when "samaccountname"
-        return "??? TODO ???"
       else
         raise Exception.new("Invalid user_type ->#{initial_settings[:user_type]}<-")
       end

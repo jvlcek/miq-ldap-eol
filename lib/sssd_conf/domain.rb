@@ -3,7 +3,7 @@ require 'sssd_conf/common'
 module MiQLdapToSssd
   class Domain < Common
 
-    attr_reader :active_directory
+    attr_accessor :active_directory
 
     def initialize(initial_settings)
       case initial_settings[:user_type]

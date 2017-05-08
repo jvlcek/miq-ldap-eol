@@ -3,7 +3,18 @@ require 'sssd_conf/common'
 module MiQLdapToSssd
   class Domain < Common
 
+    attr_reader :active_directory
+
     def initialize(initial_settings)
+      case initial_settings[:user_type]
+      when "userprincipalname", "mail", "samaccountname"
+        self.active_directory = true
+      when "dn-uid", "dn-cn"
+        self.active_directory = false
+      else
+        raise Exception.new("Invalid user_type ->#{initial_settings[:user_type]}<-")
+      end
+
       super(%w(entry_cache_timeout
                ldap_auth_disable_tls_never_use_in_production
                ldap_default_bind_dn
@@ -57,7 +68,8 @@ module MiQLdapToSssd
     # TODO JJV Is this always the same? If not how can I get it?
     # JJV: ldapsearch -x -H "#{initial_settings[:mode]}://#{initial_settings[:ldaphost].first}:#{initial_settings[:ldapport]}"
     def ldap_group_object_class
-      "groupOfNames"
+      return "group" if active_directory
+      return "groupOfNames"
     end
 
     def ldap_group_search_base
@@ -73,14 +85,8 @@ module MiQLdapToSssd
     end
 
     def ldap_schema
-      case initial_settings[:user_type]
-      when "userprincipalname", "mail", "samaccountname"
-        return "AD"
-      when "dn-uid", "dn-cn"
-        return "rfc2307bis"
-      else
-        raise Exception.new("Invalid user_type ->#{initial_settings[:user_type]}<-")
-      end
+      return "AD" if active_directory
+      return "rfc2307bis"
     end
 
     def ldap_tls_cacert
@@ -96,14 +102,8 @@ module MiQLdapToSssd
     end
 
     def ldap_user_gid_number
-      case initial_settings[:user_type]
-      when "userprincipalname", "mail", "samaccountname"
-        return "primaryGroupID"
-      when "dn-uid", "dn-cn"
-        return "gidNumber"
-      else
-        raise Exception.new("Invalid user_type ->#{initial_settings[:user_type]}<-")
-      end
+      return "primaryGroupID" if active_directory
+      return "gidNumber"
     end
 
     def ldap_user_name
@@ -128,14 +128,8 @@ module MiQLdapToSssd
     end
 
     def ldap_user_search_base
-      case initial_settings[:user_type]
-      when "userprincipalname", "samaccountname", "mail"
-        return initial_settings[:basedn]
-      when "dn-uid", "dn-cn"
-        return initial_settings[:user_suffix]
-      else
-        raise Exception.new("Invalid user_type ->#{initial_settings[:user_type]}<-")
-      end
+      return initial_settings[:basedn] if active_directory
+      return initial_settings[:user_suffix]
     end
 
     def ldap_user_uid_number

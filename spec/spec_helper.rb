@@ -1,5 +1,5 @@
 require "bundler/setup"
-require "miq/ldap/eol"
+require "miqldap2sssd"
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

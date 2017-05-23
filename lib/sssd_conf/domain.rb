@@ -69,7 +69,7 @@ module MiQLdapToSssd
     # JJV: ldapsearch -x -H "#{initial_settings[:mode]}://#{initial_settings[:ldaphost].first}:#{initial_settings[:ldapport]}"
     def ldap_group_object_class
       return "group" if active_directory
-      return "groupOfNames"
+      "groupOfNames"
     end
 
     def ldap_group_search_base
@@ -86,7 +86,7 @@ module MiQLdapToSssd
 
     def ldap_schema
       return "AD" if active_directory
-      return "rfc2307bis"
+      "rfc2307bis"
     end
 
     def ldap_tls_cacert
@@ -103,21 +103,17 @@ module MiQLdapToSssd
 
     def ldap_user_gid_number
       return "primaryGroupID" if active_directory
-      return "gidNumber"
+      "gidNumber"
     end
 
     def ldap_user_name
+      return if active_directory
+
       case initial_settings[:user_type]
-      when "userprincipalname"
-        return "userprincipalname"
-      when "mail"
-        return "mail"
       when "dn-uid"
-        return "uid"
+        "uid"
       when "dn-cn"
         "cn"
-      when "samaccountname"
-        return "samaccountname"
       else
         raise Exception.new("Invalid user_type ->#{initial_settings[:user_type]}<-")
       end
@@ -129,7 +125,7 @@ module MiQLdapToSssd
 
     def ldap_user_search_base
       return initial_settings[:basedn] if active_directory
-      return initial_settings[:user_suffix]
+      initial_settings[:user_suffix]
     end
 
     def ldap_user_uid_number

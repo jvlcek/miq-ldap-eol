@@ -11,7 +11,7 @@ module MiQLdapToSssd
 
     def initialize(initial_sttings)
       @initial_settings = initial_sttings
-      @sssd_conf_contents = sssd_conf2hash
+      @sssd_conf_contents = sssd_conf_to_hash
     end
 
     def update
@@ -27,37 +27,16 @@ module MiQLdapToSssd
 
     private
 
-    def current_attribute_values(section)
-      result = {}
-
-      sssd_conf_file = File.open(SSSD_CONF_FILE, "r")
-      while (line = sssd_conf_file.gets)
-        line = line.strip.downcase
-        next unless line.start_with?("[#{section.to_s}")
-
-        while (line = sssd_conf_file.gets)
-          line = line.strip.downcase
-          return result if line.start_with?("[")
-          next if line.match(/\s*=\s*/).nil?
-          result[line.match(/\s*=\s*/).pre_match.to_sym] = line.match(/\s*=\s*/).post_match
+    def sssd_conf_to_hash
+      IniParse.open(SSSD_CONF_FILE).to_hash.deep_transform_keys! do |key|
+        key = key.downcase
+        if key.start_with?("domain/")
+          :domain 
+        else
+          key.to_sym
         end
       end
-      result
-    end
-
-    def current_sections
-      sections = File.open(SSSD_CONF_FILE, "r").grep(/\[/)
-      sections.each_with_object({}) do |section, hsh|
-        section = "domain" if section.start_with?("[domain")
-
-        hsh[section.gsub(/"|\[|\]/, '').strip.downcase.to_sym] = {}
-      end 
-    end
-
-    def sssd_conf2hash
-      sections_hash = current_sections
-      sections_hash.each { |section, _value| sections_hash[section] = current_attribute_values(section) }
-    end
+    end 
 
     def write_updates(sssd_conf_contents)
       File.open(SSSD_CONF_FILE, "w") do |f|

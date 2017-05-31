@@ -40,6 +40,12 @@ module MiQLdapToSssd
             :short => "-c",
             :default => nil,
             :type => :string
+
+        opt :normalize_userids_only,
+            "Normalize the userids then exit",
+            :short => "-n",
+            :default => false,
+            :type => :flag
       end
 
       opts[:tls_cacertdir] = File.dirname(opts[:tls_cacert]) unless opts[:tls_cacert].nil?

@@ -6,6 +6,7 @@ $LOAD_PATH.push("#{File.dirname(__FILE__)}/../lib")
 require 'authconfig'
 require 'configure_apache'
 require 'configure_appliance_settings'
+require 'configure_database'
 require 'configure_selinux'
 require 'configure_sssd_rules'
 require 'miqldap_configuration'
@@ -35,13 +36,19 @@ module MiQLdapToSssd
     initial_settings = MiqLdapConfiguration.initial_settings
     LOGGER.debug("Initial Settings #{initial_settings}")
     pp initial_settings # JJV Remove
-    AuthConfig.new(initial_settings).run_auth_config
-    SssdConf.new(initial_settings).update
-    ConfigureSssdRules.disable_tls if initial_settings[:mode] == "ldap"
-    ConfigureApache.new(initial_settings).configure
-    ConfigureSELinux.new(initial_settings).configure
-    Services.restart
-    ConfigureApplianceSettings.new(initial_settings).configure
+
+
+    unless initial_settings[:normalize_userids_only]
+      AuthConfig.new(initial_settings).run_auth_config
+      SssdConf.new(initial_settings).update
+      ConfigureSssdRules.disable_tls if initial_settings[:mode] == "ldap"
+      ConfigureApache.new(initial_settings).configure
+      ConfigureSELinux.new(initial_settings).configure
+      Services.restart
+      ConfigureApplianceSettings.new(initial_settings).configure
+    end
+
+    ConfigureDatabase.new(initial_settings).normalize_userids
 
     LOGGER.debug("#{$PROGRAM_NAME} Conversion Completed")
     say("#{$PROGRAM_NAME} Conversion Completed")

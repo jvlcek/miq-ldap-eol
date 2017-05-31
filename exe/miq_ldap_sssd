@@ -23,6 +23,7 @@ end
 
 module MiQLdapToSssd
   LOGGER = Logger.new('miq_ldap_to_sssd.log')
+  SSSD_CONF_FILE = "/etc/sssd/sssd.conf".freeze
 
   LOGGER.formatter = proc do |severity, time, progname, msg|
     "[#{time}] #{severity}: #{msg}\n"

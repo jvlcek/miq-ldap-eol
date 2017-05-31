@@ -1,11 +1,10 @@
+require 'iniparse'
 require 'sssd_conf/domain'
 require 'sssd_conf/ifp'
 require 'sssd_conf/pam'
 require 'sssd_conf/sssd'
 
 module MiQLdapToSssd
-  SSSD_CONF_FILE = "/etc/sssd/sssd.conf".freeze
-
   class SssdConf
     attr_reader :initial_settings, :sssd_conf_contents
 

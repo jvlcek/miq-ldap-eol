@@ -9,8 +9,12 @@ module MiQLdapToSssd
     attr_reader :initial_settings
 
     def initialize(initial_sttings)
+      LOGGER.debug("Invokded #{self.class}\##{__method__}")
       @initial_settings = initial_sttings
-      @domain = "GOD ONLY KNOWS" #  :) JJV
+      @sssd_domain = domain_from_sssd
+
+      LOGGER.debug("#{__method__} initial_settings #{initial_settings}")
+      LOGGER.debug("#{__method__} sssd_domain #{sssd_domain}")
     end
 
     def normalize_userids_to_upn
@@ -23,36 +27,44 @@ module MiQLdapToSssd
       User.all.map do |u|
 
         next if u[:userid] == "admin"
-        next if u[:userid].include? "@" # u[:userid] is already UPN
 
         LOGGER.debug("Updating userid u[:userid]")
 
-        if u[:userid].include? ","
-          Strip u[:userid] from Distinguished Name (DC)
-          # JJV START HERE
+        case
+        when u[:userid].include?(",")
+          # Generated from an MiqLdap login using OpenLdap
+          u[:userid] = dn_to_upn(u[:userid])
+        when u[:userid].include?("@")
+          # Generated from an MiqLdap login using Active Directory
+          u[:userid] = u[:userid].downcase
+        else
+          # Generated from an SSSD login
+          u[:userid] = "{u[:userid]}@#{sssd_domain}".downcase
         end
 
-        u[:userid] = "#{u[:userid]}@#{domain}"
-
-        LOGGER.debug("New userid u[:userid]")
-
+        LOGGER.debug("Saving userid #{u[:userid]}")
         u.save
       end
     end
 
-      LOGGER.debug("Initial httpd_role: #{update.config[:authentication][:httpd_role]}")
-      LOGGER.debug("Initial  ldap_role: #{update.config[:authentication][:ldap_role]}")
+    private
 
-      update.config[:authentication][:mode] = "httpd"
-      update.config[:authentication][:httpd_role] = update.config[:authentication][:ldap_role]
-      update.config[:authentication][:ldap_role]  = false
+    def domain_from_sssd
+      LOGGER.debug("Invokded #{self.class}\##{__method__}")
+      sssd_ini = IniFile.load(SSSD_CONF_FILE)
+      return if sssd_ini.nil?
 
-      LOGGER.debug("Updated       mode: #{update.config[:authentication][:mode]}")
-      LOGGER.debug("Updated httpd_role: #{update.config[:authentication][:httpd_role]}")
-      LOGGER.debug("Updated  ldap_role: #{update.config[:authentication][:ldap_role]}")
+      sssd_ini.sections[sssd_ini.sections.index{|s| s.include?("domain/")}].split("/")[1]
+    end
 
-      update.save
+    def dn_to_upn(userid)
+      LOGGER.debug("Invokded #{self.class}\##{__method__}")
+      domain = userid.split(",").collect { |p| p.split('dc=')[1] }.compact.join('.')
+      user = userid.split(",").collect { |p| p.split('=')[1] }[0]
+
+      "#{user}@#{domain}".downcase
     end
 
   end
 end
+

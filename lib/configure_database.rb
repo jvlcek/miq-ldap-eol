@@ -1,4 +1,5 @@
 require 'fileutils'
+require 'inifile'
 
 module MiQLdapToSssd
   NORMALIZE_MODES = ['httpd', 'ldaps', 'ldap'].freeze
@@ -6,7 +7,7 @@ module MiQLdapToSssd
   class ConfigureDatabaseError < StandardError; end
 
   class ConfigureDatabase
-    attr_reader :initial_settings
+    attr_reader :initial_settings, :sssd_domain
 
     def initialize(initial_sttings)
       LOGGER.debug("Invokded #{self.class}\##{__method__}")
@@ -18,7 +19,6 @@ module MiQLdapToSssd
     end
 
     def normalize_userids_to_upn
-
       LOGGER.debug("Invokded #{self.class}\##{__method__}")
       LOGGER.debug("Normalizing userids to User Principal Name (UPN)")
 
@@ -26,24 +26,34 @@ module MiQLdapToSssd
 
       User.all.map do |u|
 
-        next if u[:userid] == "admin"
+        next if u.userid == "admin"
 
-        LOGGER.debug("Updating userid u[:userid]")
+        LOGGER.debug("Updating userid #{u.userid}")
+        LOGGER.debug("Updating userid #{u.userid}")
 
         case
-        when u[:userid].include?(",")
+        when u.userid.include?(",")
+          LOGGER.debug("Generated from an MiqLdap login using OpenLdap")
           # Generated from an MiqLdap login using OpenLdap
-          u[:userid] = dn_to_upn(u[:userid])
-        when u[:userid].include?("@")
+          u.userid = dn_to_upn(u.userid)
+        when u.userid.include?("@")
+          LOGGER.debug("Generated from an MiqLdap login using Active Directory")
           # Generated from an MiqLdap login using Active Directory
-          u[:userid] = u[:userid].downcase
+          u.userid = u.userid.downcase
         else
+          LOGGER.debug("Generated from an SSSD login")
           # Generated from an SSSD login
-          u[:userid] = "{u[:userid]}@#{sssd_domain}".downcase
+          u.userid = "#{u.userid}@#{sssd_domain}".downcase
         end
 
-        LOGGER.debug("Saving userid #{u[:userid]}")
-        u.save
+        check_duplicate_u = User.lookup_by_identity(u.userid)
+        if check_duplicate_u.nil? || check_duplicate_u.id == u.id
+          LOGGER.debug("Saving userid #{u.userid}")
+          u.save
+        else
+          LOGGER.debug("Deleting this user, duplicate found #{u.id}")
+          u.delete
+        end
       end
     end
 

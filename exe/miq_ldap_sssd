@@ -32,24 +32,26 @@ module MiQLdapToSssd
   if __FILE__ == $PROGRAM_NAME
     LOGGER.debug("Running #{$PROGRAM_NAME}")
 
-    # if /etc/sssd/sssd.conf already exists exit with error
-
     initial_settings = MiqLdapConfiguration.initial_settings
     LOGGER.debug("Initial Settings #{initial_settings}")
-    pp initial_settings # JJV Remove
-
 
     unless initial_settings[:normalize_userids_only]
+      if File.exists?(SSSD_CONF_FILE)
+        say("ERROR: #{SSSD_CONF_FILE} already exists. No changes will be made. Exiting")
+        LOGGER.error("#{SSSD_CONF_FILE} already exists. No changes will be made. Exiting")
+        exit
+      end
+
       AuthConfig.new(initial_settings).run_auth_config
       SssdConf.new(initial_settings).update
       ConfigureSssdRules.disable_tls if initial_settings[:mode] == "ldap"
       ConfigureApache.new(initial_settings).configure
       ConfigureSELinux.new(initial_settings).configure
-      Services.restart
       ConfigureApplianceSettings.new(initial_settings).configure
     end
 
-    ConfigureDatabase.new(initial_settings).normalize_userids
+    ConfigureDatabase.new(initial_settings).normalize_userids_to_upn
+    Services.restart
 
     LOGGER.debug("#{$PROGRAM_NAME} Conversion Completed")
     say("#{$PROGRAM_NAME} Conversion Completed")

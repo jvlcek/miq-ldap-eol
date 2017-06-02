@@ -25,24 +25,19 @@ module MiQLdapToSssd
       return unless NORMALIZE_MODES.include? Settings.authentication.to_hash[:mode]
 
       User.all.map do |u|
-
         next if u.userid == "admin"
 
-        LOGGER.debug("Updating userid #{u.userid}")
         LOGGER.debug("Updating userid #{u.userid}")
 
         case
         when u.userid.include?(",")
           LOGGER.debug("Generated from an MiqLdap login using OpenLdap")
-          # Generated from an MiqLdap login using OpenLdap
           u.userid = dn_to_upn(u.userid)
         when u.userid.include?("@")
           LOGGER.debug("Generated from an MiqLdap login using Active Directory")
-          # Generated from an MiqLdap login using Active Directory
           u.userid = u.userid.downcase
         else
           LOGGER.debug("Generated from an SSSD login")
-          # Generated from an SSSD login
           u.userid = "#{u.userid}@#{sssd_domain}".downcase
         end
 

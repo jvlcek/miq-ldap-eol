@@ -98,7 +98,7 @@ module MiQLdapToSssd
     end
 
     def ldap_user_extra_attrs
-      "mail, givenname, sn, displayname"
+      "mail, givenname, sn, displayname, domainname"
     end
 
     def ldap_user_gid_number

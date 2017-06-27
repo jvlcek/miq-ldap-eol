@@ -11,7 +11,7 @@ module MiQLdapToSssd
     end
 
     def user_attributes
-      "+mail, +givenname, +sn, +displayname"
+      "+mail, +givenname, +sn, +displayname, +domainname"
     end
   end
 end

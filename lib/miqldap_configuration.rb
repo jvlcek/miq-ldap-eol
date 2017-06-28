@@ -46,6 +46,12 @@ module MiQLdapToSssd
             :short => "-n",
             :default => false,
             :type => :flag
+
+        opt :skip_normalizing_userids,
+            "Do the MiqLdap to SSSD conversion but skip the normalizing of the userids",
+            :short => "-s",
+            :default => false,
+            :type => :flag
       end
 
       opts[:tls_cacertdir] = File.dirname(opts[:tls_cacert]) unless opts[:tls_cacert].nil?

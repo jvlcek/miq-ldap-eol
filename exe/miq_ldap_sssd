@@ -50,7 +50,7 @@ module MiQLdapToSssd
       ConfigureApplianceSettings.new(initial_settings).configure
     end
 
-    ConfigureDatabase.new(initial_settings).normalize_userids_to_upn
+    ConfigureDatabase.new(initial_settings).normalize_userids_to_upn unless initial_settings[:skip_normalizing_userids]
     Services.restart
 
     LOGGER.debug("#{$PROGRAM_NAME} Conversion Completed")
